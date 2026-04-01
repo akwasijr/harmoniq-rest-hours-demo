@@ -1,0 +1,173 @@
+import type { Metadata, Viewport } from "next";
+import { Suspense } from "react";
+import {
+  Geist,
+  Geist_Mono,
+  IBM_Plex_Sans,
+  Inter,
+  Manrope,
+  Playfair_Display,
+  Plus_Jakarta_Sans,
+  Public_Sans,
+  Source_Sans_3,
+  Work_Sans,
+} from "next/font/google";
+import { ThemeProvider } from "@/components/shared/theme-provider";
+import { RouteProgress } from "@/components/shared/route-progress";
+import { validateEnv } from "@/lib/env";
+import { getSiteUrl } from "@/lib/site-url";
+import "./globals.css";
+
+// Validate env vars once at startup (server-only, runs during module init)
+validateEnv();
+
+const geistSans = Geist({
+  variable: "--font-geist-sans",
+  subsets: ["latin"],
+});
+
+const geistMono = Geist_Mono({
+  variable: "--font-geist-mono",
+  subsets: ["latin"],
+});
+
+const playfair = Playfair_Display({
+  variable: "--font-playfair",
+  subsets: ["latin"],
+  weight: ["400", "500"],
+});
+
+const inter = Inter({
+  variable: "--font-inter",
+  subsets: ["latin"],
+});
+
+const ibmPlexSans = IBM_Plex_Sans({
+  variable: "--font-ibm-plex-sans",
+  subsets: ["latin"],
+  weight: ["400", "500", "600", "700"],
+});
+
+const manrope = Manrope({
+  variable: "--font-manrope",
+  subsets: ["latin"],
+});
+
+const plusJakartaSans = Plus_Jakarta_Sans({
+  variable: "--font-plus-jakarta-sans",
+  subsets: ["latin"],
+});
+
+const publicSans = Public_Sans({
+  variable: "--font-public-sans",
+  subsets: ["latin"],
+});
+
+const sourceSans3 = Source_Sans_3({
+  variable: "--font-source-sans-3",
+  subsets: ["latin"],
+});
+
+const workSans = Work_Sans({
+  variable: "--font-work-sans",
+  subsets: ["latin"],
+});
+
+export const metadata: Metadata = {
+  title: {
+    default: "Harmoniq Safety: Workplace Safety & Asset Management Platform",
+    template: "%s | Harmoniq Safety",
+  },
+  description:
+    "Report incidents, manage risks, track assets, and ensure compliance. All-in-one safety and asset management platform for industrial organizations.",
+  keywords: [
+    "workplace safety platform",
+    "incident reporting software",
+    "asset management",
+    "safety compliance",
+    "risk management",
+    "OSHA compliance",
+    "safety inspection",
+    "maintenance management",
+    "EHS software",
+    "asset tracking",
+  ],
+  authors: [{ name: "Harmoniq Safety" }],
+  creator: "Harmoniq Safety",
+  publisher: "Harmoniq Safety",
+  metadataBase: new URL(getSiteUrl()),
+  openGraph: {
+    type: "website",
+    locale: "en_US",
+    siteName: "Harmoniq Safety",
+    title: "Harmoniq Safety: Workplace Safety & Asset Management Platform",
+    description: "Report incidents, manage risks, track assets, and ensure compliance, all in one platform.",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Harmoniq Safety Platform" }],
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Harmoniq Safety",
+    description: "All-in-one workplace safety and asset management platform.",
+    images: ["/og-image.png"],
+  },
+  alternates: {
+    languages: {
+      en: "/",
+      sv: "/?lang=sv",
+      nl: "/?lang=nl",
+    },
+  },
+  manifest: "/manifest.json",
+  appleWebApp: {
+    capable: true,
+    statusBarStyle: "default",
+    title: "Harmoniq Safety",
+  },
+  icons: {
+    icon: [
+      { url: "/favicon.svg", type: "image/svg+xml" },
+      { url: "/favicon.ico", sizes: "32x32" },
+    ],
+    apple: [
+      { url: "/favicon.svg" },
+    ],
+  },
+};
+
+export const viewport: Viewport = {
+  themeColor: [
+    { media: "(prefers-color-scheme: light)", color: "#ffffff" },
+    { media: "(prefers-color-scheme: dark)", color: "#0a0a0a" },
+  ],
+  width: "device-width",
+  initialScale: 1,
+};
+
+export default function RootLayout({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
+  return (
+    <html lang="en" suppressHydrationWarning>
+      <body
+        className={`${geistSans.variable} ${geistMono.variable} ${playfair.variable} ${inter.variable} ${ibmPlexSans.variable} ${manrope.variable} ${plusJakartaSans.variable} ${publicSans.variable} ${sourceSans3.variable} ${workSans.variable} font-sans antialiased`}
+      >
+        <ThemeProvider
+          attribute="class"
+          defaultTheme="light"
+          enableSystem
+          disableTransitionOnChange
+        >
+          <Suspense fallback={null}>
+            <RouteProgress />
+          </Suspense>
+          <a href="#main-content" className="skip-link">
+            Skip to main content
+          </a>
+          <main id="main-content">{children}</main>
+        </ThemeProvider>
+      </body>
+    </html>
+  );
+}

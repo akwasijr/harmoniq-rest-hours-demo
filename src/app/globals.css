@@ -1,0 +1,552 @@
+@import "tailwindcss";
+
+/* ============================================
+   NPROGRESS — Route transition progress bar
+   ============================================ */
+
+#nprogress {
+  pointer-events: none;
+}
+
+#nprogress .bar {
+  background: hsl(var(--primary));
+  position: fixed;
+  z-index: 99999;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 3px;
+}
+
+#nprogress .peg {
+  display: block;
+  position: absolute;
+  right: 0;
+  width: 100px;
+  height: 100%;
+  box-shadow: 0 0 10px hsl(var(--primary)), 0 0 5px hsl(var(--primary));
+  opacity: 1;
+  transform: rotate(3deg) translate(0px, -4px);
+}
+
+/* ============================================
+   STRIPE-STYLE CORNER GRADIENT — Auth pages
+   ============================================ */
+@keyframes auth-flow {
+  0%   { background-position: 0% 0%; }
+  50%  { background-position: 100% 100%; }
+  100% { background-position: 0% 0%; }
+}
+
+@keyframes auth-morph {
+  0%   { border-radius: 40% 60% 50% 50%; transform: rotate(0deg) translate(0, 0); }
+  33%  { border-radius: 55% 45% 60% 40%; transform: rotate(5deg) translate(3%, -3%); }
+  66%  { border-radius: 45% 55% 40% 60%; transform: rotate(-4deg) translate(-2%, 3%); }
+  100% { border-radius: 40% 60% 50% 50%; transform: rotate(0deg) translate(0, 0); }
+}
+
+@layer base {
+  .auth-bg {
+    position: fixed;
+    inset: 0;
+    background: white;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .auth-bg::before {
+    content: "";
+    position: absolute;
+    top: -15%;
+    right: -5%;
+    width: 40%;
+    height: 70%;
+    background: linear-gradient(
+      160deg,
+      hsla(200, 90%, 78%, 0.35),
+      hsla(240, 75%, 68%, 0.3),
+      hsla(265, 70%, 55%, 0.35),
+      hsla(280, 65%, 48%, 0.3),
+      hsla(210, 85%, 75%, 0.3)
+    );
+    background-size: 300% 300%;
+    animation: auth-flow 8s ease-in-out infinite, auth-morph 12s ease-in-out infinite;
+    filter: blur(40px);
+    transform-origin: top right;
+  }
+
+  .auth-bg::after {
+    content: "";
+    position: absolute;
+    top: 5%;
+    right: -3%;
+    width: 28%;
+    height: 55%;
+    background: linear-gradient(
+      170deg,
+      hsla(195, 90%, 80%, 0.3),
+      hsla(230, 80%, 72%, 0.25),
+      hsla(260, 65%, 58%, 0.3),
+      hsla(195, 85%, 78%, 0.25)
+    );
+    background-size: 300% 300%;
+    animation: auth-flow 6s ease-in-out infinite reverse, auth-morph 10s ease-in-out infinite reverse;
+    filter: blur(35px);
+    transform-origin: top right;
+    animation-delay: -3s;
+  }
+
+  .auth-bg-accent {
+    position: absolute;
+    top: -8%;
+    right: 3%;
+    width: 20%;
+    height: 45%;
+    background: linear-gradient(
+      150deg,
+      hsla(210, 95%, 82%, 0.28),
+      hsla(255, 70%, 65%, 0.25),
+      hsla(275, 60%, 50%, 0.22),
+      hsla(210, 90%, 78%, 0.25)
+    );
+    background-size: 300% 300%;
+    animation: auth-flow 10s ease-in-out infinite, auth-morph 14s ease-in-out infinite;
+    filter: blur(30px);
+    transform-origin: top right;
+    animation-delay: -6s;
+  }
+}
+
+@layer base {
+  @media (prefers-reduced-motion: reduce) {
+    .auth-bg::before,
+    .auth-bg::after,
+    .auth-bg-accent {
+      animation: none !important;
+    }
+  }
+}
+
+/* ============================================
+   HARMONIQ SAFETY - DESIGN TOKENS
+   ============================================ */
+
+:root {
+  /* Background colors - subtle hierarchy, NO accent on cards */
+  --background: 0 0% 100%;
+  --foreground: 240 10% 3.9%;
+  --card: 0 0% 100%;
+  --card-foreground: 240 10% 3.9%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 240 10% 3.9%;
+
+  /* Primary - #2D1B69 - deep purple for main actions */
+  --primary: 260 59% 26%;
+  --primary-foreground: 0 0% 98%;
+
+  /* Secondary - lighter purple for accents */
+  --secondary: 260 50% 45%;
+  --secondary-foreground: 0 0% 98%;
+
+  /* Muted - for disabled states and placeholders */
+  --muted: 240 4.8% 95.9%;
+  --muted-foreground: 240 3.8% 46.1%;
+
+  /* Accent - light purple tint */
+  --accent: 260 50% 93%;
+  --accent-foreground: 260 59% 26%;
+
+  /* Semantic colors */
+  --destructive: 0 84.2% 60.2%;
+  --destructive-foreground: 0 0% 98%;
+  --success: 142 76% 36%;
+  --success-foreground: 0 0% 98%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 98%;
+  --info: 260 50% 45%;
+  --info-foreground: 0 0% 98%;
+
+  /* Borders - subtle, not accent colored */
+  --border: 240 5.9% 90%;
+  --input: 240 5.9% 90%;
+  --ring: 260 59% 26%;
+
+  /* Radius tokens */
+  --radius: 0.5rem;
+
+  /* Shadows - subtle depth */
+  --shadow-sm: 0 1px 2px 0 rgb(0 0 0 / 0.05);
+  --shadow: 0 1px 3px 0 rgb(0 0 0 / 0.1), 0 1px 2px -1px rgb(0 0 0 / 0.1);
+  --shadow-md: 0 4px 6px -1px rgb(0 0 0 / 0.1), 0 2px 4px -2px rgb(0 0 0 / 0.1);
+  --shadow-lg: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+
+  /* Sidebar - dashboard specific */
+  --sidebar-background: 260 59% 16%;
+  --sidebar-foreground: 0 0% 98%;
+  --sidebar-primary: 260 50% 55%;
+  --sidebar-primary-foreground: 0 0% 98%;
+  --sidebar-accent: 260 50% 22%;
+  --sidebar-accent-foreground: 0 0% 98%;
+  --sidebar-border: 260 40% 30%;
+  --sidebar-ring: 260 50% 55%;
+
+  /* Chart colors */
+  --chart-1: 12 76% 61%;
+  --chart-2: 173 58% 39%;
+  --chart-3: 197 37% 24%;
+  --chart-4: 43 74% 66%;
+  --chart-5: 27 87% 67%;
+
+  /* Status colors */
+  --status-new: 199 89% 48%;
+  --status-in-progress: 38 92% 50%;
+  --status-in-review: 271 81% 56%;
+  --status-resolved: 142 76% 36%;
+  --status-archived: 240 3.8% 46.1%;
+
+  /* Severity colors */
+  --severity-low: 142 76% 36%;
+  --severity-medium: 38 92% 50%;
+  --severity-high: 25 95% 53%;
+  --severity-critical: 0 84.2% 60.2%;
+}
+
+/* Dark mode - WCAG AA compliant contrast */
+.dark {
+  --background: 240 10% 3.9%;
+  --foreground: 0 0% 98%;
+  --card: 240 10% 3.9%;
+  --card-foreground: 0 0% 98%;
+  --popover: 240 10% 3.9%;
+  --popover-foreground: 0 0% 98%;
+
+  /* Primary - lighter purple for dark mode */
+  --primary: 260 60% 55%;
+  --primary-foreground: 260 59% 10%;
+
+  /* Secondary */
+  --secondary: 260 40% 22%;
+  --secondary-foreground: 0 0% 98%;
+
+  --muted: 240 3.7% 15.9%;
+  --muted-foreground: 240 5% 64.9%;
+
+  --accent: 260 40% 18%;
+  --accent-foreground: 0 0% 98%;
+
+  --destructive: 0 62.8% 50.6%;
+  --destructive-foreground: 0 0% 98%;
+  --success: 142 71% 45%;
+  --success-foreground: 0 0% 98%;
+  --warning: 38 92% 50%;
+  --warning-foreground: 0 0% 3.9%;
+  --info: 260 60% 55%;
+  --info-foreground: 0 0% 3.9%;
+
+  --border: 240 3.7% 20%;
+  --input: 240 3.7% 20%;
+  --ring: 260 60% 55%;
+
+  --sidebar-background: 240 5.9% 10%;
+  --sidebar-foreground: 240 4.8% 95.9%;
+  --sidebar-primary: 260 60% 65%;
+  --sidebar-primary-foreground: 240 5.9% 10%;
+  --sidebar-accent: 240 3.7% 15.9%;
+  --sidebar-accent-foreground: 240 4.8% 95.9%;
+  --sidebar-border: 240 3.7% 15.9%;
+  --sidebar-ring: 240 4.9% 83.9%;
+
+  --chart-1: 220 70% 50%;
+  --chart-2: 160 60% 45%;
+  --chart-3: 30 80% 55%;
+  --chart-4: 280 65% 60%;
+  --chart-5: 340 75% 55%;
+}
+
+/* ============================================
+   THEME CONFIGURATION
+   ============================================ */
+
+@theme inline {
+  /* Badge/Status Colors - Light mode backgrounds */
+  --color-red-100: #fee2e2;
+  --color-red-800: #991b1b;
+  --color-red-950: #450a0a;
+  --color-red-200: #fecaca;
+  
+  --color-green-100: #dcfce7;
+  --color-green-800: #166534;
+  --color-green-950: #052e16;
+  --color-green-200: #bbf7d0;
+  
+  --color-yellow-100: #fef9c3;
+  --color-yellow-800: #854d0e;
+  --color-yellow-950: #422006;
+  --color-yellow-200: #fef08a;
+  
+  --color-orange-100: #ffedd5;
+  --color-orange-800: #9a3412;
+  --color-orange-950: #431407;
+  --color-orange-200: #fed7aa;
+  
+  --color-blue-100: #dbeafe;
+  --color-blue-800: #1e40af;
+  --color-blue-950: #172554;
+  --color-blue-200: #bfdbfe;
+  
+  --color-amber-100: #fef3c7;
+  --color-amber-800: #92400e;
+  --color-amber-950: #451a03;
+  --color-amber-200: #fde68a;
+  
+  --color-purple-100: #f3e8ff;
+  --color-purple-800: #6b21a8;
+  --color-purple-950: #3b0764;
+  --color-purple-200: #e9d5ff;
+  
+  --color-gray-100: #f3f4f6;
+  --color-gray-800: #1f2937;
+  --color-gray-900: #111827;
+  --color-gray-200: #e5e7eb;
+  
+  --color-slate-100: #f1f5f9;
+  --color-slate-800: #1e293b;
+  --color-slate-200: #e2e8f0;
+
+  --color-background: hsl(var(--background));
+  --color-foreground: hsl(var(--foreground));
+  --color-card: hsl(var(--card));
+  --color-card-foreground: hsl(var(--card-foreground));
+  --color-popover: hsl(var(--popover));
+  --color-popover-foreground: hsl(var(--popover-foreground));
+  --color-primary: hsl(var(--primary));
+  --color-primary-foreground: hsl(var(--primary-foreground));
+  --color-brand-solid: hsl(var(--brand-solid, var(--primary)));
+  --color-brand-solid-foreground: hsl(var(--brand-solid-foreground, var(--primary-foreground)));
+  --color-secondary: hsl(var(--secondary));
+  --color-secondary-foreground: hsl(var(--secondary-foreground));
+  --color-muted: hsl(var(--muted));
+  --color-muted-foreground: hsl(var(--muted-foreground));
+  --color-accent: hsl(var(--accent));
+  --color-accent-foreground: hsl(var(--accent-foreground));
+  --color-destructive: hsl(var(--destructive));
+  --color-destructive-foreground: hsl(var(--destructive-foreground));
+  --color-border: hsl(var(--border));
+  --color-input: hsl(var(--input));
+  --color-ring: hsl(var(--ring));
+  --color-success: hsl(var(--success));
+  --color-warning: hsl(var(--warning));
+  --color-info: hsl(var(--info));
+  --font-sans: var(--font-geist-sans);
+  --font-mono: var(--font-geist-mono);
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: var(--radius);
+  --radius-lg: calc(var(--radius) + 4px);
+  --radius-xl: calc(var(--radius) + 8px);
+}
+
+/* ============================================
+   BASE STYLES
+   ============================================ */
+
+* {
+  border-color: hsl(var(--border));
+}
+
+body {
+  background-color: hsl(var(--background));
+  color: hsl(var(--foreground));
+  font-feature-settings: "rlig" 1, "calt" 1;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+.field-app-shell {
+  font-family: var(--field-app-font-family, var(--font-sans));
+}
+
+.field-app-panel {
+  border-radius: var(--radius) !important;
+}
+
+.field-app-control {
+  border-radius: var(--radius) !important;
+}
+
+.field-app-shell[data-field-shadow="none"] .field-app-surface {
+  box-shadow: none;
+}
+
+.field-app-shell[data-field-shadow="subtle"] .field-app-surface {
+  box-shadow: 0 6px 18px -12px hsl(var(--foreground) / 0.22);
+}
+
+.field-app-shell[data-field-shadow="strong"] .field-app-surface {
+  box-shadow: 0 14px 32px -18px hsl(var(--foreground) / 0.3);
+}
+
+/* ============================================
+   ACCESSIBILITY
+   ============================================ */
+
+/* Focus visible ring - ALWAYS visible for keyboard navigation */
+:focus-visible {
+  outline: 2px solid hsl(var(--ring));
+  outline-offset: 2px;
+}
+
+/* Respect reduced motion preference */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* Skip link for screen readers */
+.skip-link {
+  position: absolute;
+  top: -40px;
+  left: 0;
+  background: hsl(var(--primary));
+  color: hsl(var(--primary-foreground));
+  padding: 8px;
+  z-index: 100;
+}
+
+.skip-link:focus {
+  top: 0;
+}
+
+/* Screen reader only */
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border-width: 0;
+}
+
+/* ============================================
+   SCROLLBAR STYLING
+   ============================================ */
+
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+::-webkit-scrollbar-thumb {
+  background: hsl(var(--muted-foreground) / 0.3);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: hsl(var(--muted-foreground) / 0.5);
+}
+
+/* ============================================
+   TYPOGRAPHY CLASSES
+   ============================================ */
+
+/* Headings - NO ALL CAPS, use these for consistency */
+.heading-1 {
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  font-weight: 700;
+  letter-spacing: -0.025em;
+}
+
+.heading-2 {
+  font-size: 1.875rem;
+  line-height: 2.25rem;
+  font-weight: 600;
+  letter-spacing: -0.025em;
+}
+
+.heading-3 {
+  font-size: 1.5rem;
+  line-height: 2rem;
+  font-weight: 600;
+}
+
+.heading-4 {
+  font-size: 1.25rem;
+  line-height: 1.75rem;
+  font-weight: 600;
+}
+
+.body-text {
+  font-size: 1rem;
+  line-height: 1.5rem;
+}
+
+.body-text-sm {
+  font-size: 0.875rem;
+  line-height: 1.25rem;
+}
+
+.caption {
+  font-size: 0.75rem;
+  line-height: 1rem;
+  color: hsl(var(--muted-foreground));
+}
+
+/* Animated gradient background */
+@keyframes gradient-shift {
+  0% {
+    background-position: 0% 50%;
+  }
+  50% {
+    background-position: 100% 50%;
+  }
+  100% {
+    background-position: 0% 50%;
+  }
+}
+
+.animated-gradient {
+  background: linear-gradient(
+    135deg,
+    #000000 0%,
+    #0d0520 20%,
+    #000000 40%,
+    #150935 60%,
+    #000000 80%,
+    #0d0520 100%
+  );
+  background-size: 400% 400%;
+  animation: gradient-shift 15s ease infinite;
+}
+
+/* QR Scanner scan line animation */
+@keyframes scan-line {
+  0% {
+    top: 0.5rem;
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+  100% {
+    top: calc(100% - 0.5rem);
+    opacity: 1;
+  }
+}
+
+.animate-scan-line {
+  animation: scan-line 2s ease-in-out infinite alternate;
+  position: absolute;
+}
